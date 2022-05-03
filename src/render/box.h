@@ -1,6 +1,6 @@
 #ifndef BOX_H
 #define BOX_H
-#include <Eigen/Geometry> 
+#include <eigen3/Eigen/Geometry> 
 
 struct BoxQ
 {
