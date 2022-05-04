@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
 project(playback)
 
-find_package(PCL 1.2 REQUIRED)
+find_package(PCL 1.10 REQUIRED)
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
@@ -17,7 +17,3 @@ list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 
 add_executable (environment src/environment.cpp src/render/render.cpp src/processPointClouds.cpp)
 target_link_libraries (environment ${PCL_LIBRARIES})
-
-
-
-

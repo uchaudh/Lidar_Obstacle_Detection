@@ -34,10 +34,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData()
   		point.y = 5*ry;
   		point.z = 0;
 
-  		cloud->points.push_back(point);render
-  	cloud->height = 1;
-
-  	return cloud;
+  		cloud->points.push_back(point);rendersudo bash packages_install_ubuntu_focal_fossa.sh
 
 }
 
@@ -64,14 +61,16 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 	srand(time(NULL));
 
 	while(maxIterations)
+	{
 		//initialise required variables
 		float x1,y1,x2,y2,x3,y3;
 		float a,b,c,d;
 		//pick two random points
 		std::unordered_set<int> inliers;
 		while(inliers.size() < 2)
+		{
 			inliers.insert(rand()%(cloud->points.size()));
-		
+		}
 		//construct a line with the two points
 		auto itr = inliers.begin();
 
@@ -87,19 +86,27 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 
 		for(int i = 0; i < cloud->points.size(); i++)
 		{
+			if(inliers.count(i)>0)
+				continue;
+
 			pcl::PointXYZ point = cloud->points[i];
 			x3 = point.x;
 			y3 = point.y;
 
 			d = fabs(a*x3+b*y3+c)/sqrt(a*a+b*b);
 
-			if(d < distanceTol)
+			if(d <= distanceTol)
+			{
 				inliers.insert(i);
+			}
 		}
 
-
-
-
+		if(inliers.size()>inliersResult.size())
+		{
+			inliersResult = inliers;
+		}
+	}
+	
 	return inliersResult;
 
 }
@@ -115,7 +122,7 @@ int main ()
 	
 
 	// TODO: Change the max iteration and distance tolerance arguments for Ransac function
-	std::unordered_set<int> inliers = Ransac(cloud, 0, 0);
+	std::unordered_set<int> inliers = Ransac(cloud, 50, 1.0);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr  cloudInliers(new pcl::PointCloud<pcl::PointXYZ>());
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloudOutliers(new pcl::PointCloud<pcl::PointXYZ>());
