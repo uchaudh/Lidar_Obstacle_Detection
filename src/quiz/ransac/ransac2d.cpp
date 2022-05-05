@@ -67,7 +67,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 	std::unordered_set<int> inliersResult;
 	srand(time(NULL));
 
-	while(maxIterations)
+	while(maxIterations--)
 	{
 		//initialise required variables
 		float x1,y1,x2,y2,x3,y3;
@@ -94,7 +94,9 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 		for(int i = 0; i < cloud->points.size(); i++)
 		{
 			if(inliers.count(i)>0)
+			{
 				continue;
+			}
 
 			pcl::PointXYZ point = cloud->points[i];
 			x3 = point.x;
