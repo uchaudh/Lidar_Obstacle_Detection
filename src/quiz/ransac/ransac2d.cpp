@@ -34,7 +34,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData()
   		point.y = 5*ry;
   		point.z = 0;
 
-  		cloud->points.push_back(point);rendersudo bash packages_install_ubuntu_focal_fossa.sh
+  		cloud->points.push_back(point);
 
 }
 
