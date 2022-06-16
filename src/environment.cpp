@@ -34,20 +34,8 @@ std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer
     return cars;
 }
 
-
-void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
+renderBox(viewer,box,clusterId);
 {
-    // ----------------------------------------------------
-    // -----Open 3D viewer and display simple highway -----
-    // ----------------------------------------------------
-    
-    // RENDER OPTIONS
-    bool renderScene = false;
-    std::vector<Car> cars = initHighway(renderScene, viewer);
-    
-    //Create lidar sensor
-    Lidar* lidar= new Lidar(cars,0);
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pointcloud= lidar->scan();
     // renderRays(viewer,lidar->position,pointcloud);
     // renderPointCloud(viewer,pointcloud,"inputcloud");
 
@@ -63,10 +51,17 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     std::vector<Color> colors = {Color(1,0,0), Color(1,1,0), Color(0,0,1)};
     for(pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
     {
-        std::cout << "cluster size ";
-        pointProcessor->numPoints(cluster);
-        renderPointCloud(viewer,cluster,"obstacleCloud"+std::to_string(clusterId),colors[clusterId%colors.size()]);
-
+        if(render_clusters)
+        {
+            std::cout << "cluster size ";
+            pointProcessor->numPoints(cluster);
+            renderPointCloud(viewer,cluster,"obstacleCloud"+std::to_string(clusterId),colors[clusterId%colors.size()]);
+        }
+        if(render_box)
+        {
+            Box box = pointProcessor->BoundingBox(cluster);
+            renderBox(viewer,box,clusterId);
+        }
         ++clusterId;
     }
 
