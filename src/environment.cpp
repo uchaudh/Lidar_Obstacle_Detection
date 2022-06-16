@@ -34,8 +34,21 @@ std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer
     return cars;
 }
 
-renderBox(viewer,box,clusterId);
+void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
+    // ----------------------------------------------------
+    // -----Open 3D viewer and display simple highway -----
+    // ----------------------------------------------------
+
+    // RENDER OPTIONS
+    bool renderScene = false;
+    bool render_clusters = true;
+    bool render_box = true;
+    std::vector<Car> cars = initHighway(renderScene, viewer);
+
+    //Create lidar sensor
+    Lidar* lidar= new Lidar(cars,0);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pointcloud= lidar->scan();
     // renderRays(viewer,lidar->position,pointcloud);
     // renderPointCloud(viewer,pointcloud,"inputcloud");
 
@@ -44,13 +57,16 @@ renderBox(viewer,box,clusterId);
     std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentcloud = pointProcessor->SegmentPlane(pointcloud,100,0.2);
     renderPointCloud(viewer,segmentcloud.first,"obstaclecloud",Color(1,0,0));
     renderPointCloud(viewer,segmentcloud.second,"planecloud",Color(0,1,0));
-
     std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = pointProcessor->Clustering(segmentcloud.first,1.0,4.0,30.0);
-
     int clusterId = 0;
     std::vector<Color> colors = {Color(1,0,0), Color(1,1,0), Color(0,0,1)};
+
     for(pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
     {
+        std::cout << "cluster size ";
+        pointProcessor->numPoints(cluster);
+        renderPointCloud(viewer,cluster,"obstacleCloud"+std::to_string(clusterId),colors[clusterId%colors.size()]);
+
         if(render_clusters)
         {
             std::cout << "cluster size ";
@@ -65,8 +81,9 @@ renderBox(viewer,box,clusterId);
         ++clusterId;
     }
 
-}
+    renderPointCloud(viewer,segmentcloud.second,"planeCloud");
 
+}
 
 //setAngle: SWITCH CAMERA ANGLE {XY, TopDown, Side, FPS}
 void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& viewer)
