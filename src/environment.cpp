@@ -151,7 +151,7 @@ int main (int argc, char** argv)
     std::string data;
 
     if (argc != 2) {
-        data = "../src/sensors/data/pcd/data_1";
+        data = "../src/sensors/data/pcd/data_2";
     } 
     else {
         std::string ds(argv[1]);
@@ -163,7 +163,7 @@ int main (int argc, char** argv)
     }
 
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-    CameraAngle setAngle = XY;
+    CameraAngle setAngle = FPS;
     initCamera(setAngle, viewer);
 
     ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new ProcessPointClouds<pcl::PointXYZI>();
