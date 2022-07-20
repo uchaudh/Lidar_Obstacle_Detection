@@ -1,14 +1,11 @@
 #include <pcl/common/common.h>
 #include <unordered_set>
-
-#include <chrono>
-#include "../../render/render.h"
 #include "ransac3d.h"
 
+
 template<typename PointT>
-std::unordered_set<int> Ransac3D(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
+std::unordered_set<int> RANSAC3D<PointT>::Ransac3D(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
 {
-	auto startTime= std::chrono::steady_clock::now();
 	std::unordered_set<int> inliersResult;
 	srand(time(NULL));
 
@@ -78,10 +75,6 @@ std::unordered_set<int> Ransac3D(typename pcl::PointCloud<PointT>::Ptr cloud, in
 			inliersResult = inliers;
 		}
 	}
-
-	auto endTime= std::chrono::steady_clock::now();
-    auto elapseTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
-    std::cout<< "RANSAC Algorthm took: "<< elapseTime.count()<<"microseconds"<<std::endl;
 	
 	return inliersResult;
 

@@ -19,6 +19,7 @@
 #include <chrono>
 #include "render/box.h"
 #include <boost/filesystem.hpp>
+#include <unordered_set>
 
 template<typename PointT>
 class ProcessPointClouds {
@@ -46,6 +47,8 @@ public:
     typename pcl::PointCloud<PointT>::Ptr loadPcd(std::string file);
 
     std::vector<boost::filesystem::path> streamPcd(std::string dataPath);
+
+    std::unordered_set<int> Ransac3D(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol);
   
 };
 #endif /* PROCESSPOINTCLOUDS_H_ */
