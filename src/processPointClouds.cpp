@@ -104,20 +104,21 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
     
 
-    /*
-    // Create the segmentation object
-    pcl::SACSegmentation<PointT> seg;
-    seg.setOptimizeCoefficients(true);
-    seg.setModelType(pcl::SACMODEL_PLANE);
-    seg.setMethodType(pcl::SAC_RANSAC);
-    seg.setMaxIterations(maxIterations);
-    seg.setDistanceThreshold(distanceThreshold);
+    // // Default code
+    // // Create the segmentation object
+    // pcl::SACSegmentation<PointT> seg;
+    // seg.setOptimizeCoefficients(true);
+    // seg.setModelType(pcl::SACMODEL_PLANE);
+    // seg.setMethodType(pcl::SAC_RANSAC);
+    // seg.setMaxIterations(maxIterations);
+    // seg.setDistanceThreshold(distanceThreshold);
 
-    // Segment the largest planar component from the input cloud
-    seg.setInputCloud(cloud);
-    seg.segment(*inliers, *coefficients);
-    */
+    // // Segment the largest planar component from the input cloud
+    // seg.setInputCloud(cloud);
+    // seg.segment(*inliers, *coefficients);
 
+
+    //custom code
     std::unordered_set<int> inliers_set = Ransac3D(cloud, maxIterations, distanceThreshold);
 
     for (const int index : inliers_set)
@@ -147,33 +148,31 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 
     std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
 
-    /*
-    typename pcl::search::KdTree<PointT>::Ptr tree(new pcl::search::KdTree<PointT>);
-    tree->setInputCloud(cloud);
+    // //default code
+    // typename pcl::search::KdTree<PointT>::Ptr tree(new pcl::search::KdTree<PointT>);
+    // tree->setInputCloud(cloud);
+    // std::vector<pcl::PointIndices> clusterIndices;
+    // pcl::EuclideanClusterExtraction<PointT> ec;
+    // ec.setClusterTolerance(clusterTolerance);
+    // ec.setMinClusterSize(minSize);
+    // ec.setMaxClusterSize(maxSize);
+    // ec.setSearchMethod(tree);
+    // ec.setInputCloud(cloud);
+    // ec.extract(clusterIndices);
 
-    std::vector<pcl::PointIndices> clusterIndices;
-    pcl::EuclideanClusterExtraction<PointT> ec;
-    ec.setClusterTolerance(clusterTolerance);
-    ec.setMinClusterSize(minSize);
-    ec.setMaxClusterSize(maxSize);
-    ec.setSearchMethod(tree);
-    ec.setInputCloud(cloud);
-    ec.extract(clusterIndices);
+    // for(pcl::PointIndices getIndices: clusterIndices)
+    // {
+    //     typename pcl::PointCloud<PointT>::Ptr cloudCluster (new pcl::PointCloud<PointT>);
 
-    for(pcl::PointIndices getIndices: clusterIndices)
-    {
-        typename pcl::PointCloud<PointT>::Ptr cloudCluster (new pcl::PointCloud<PointT>);
+    //     for(int index : getIndices.indices)
+    //         cloudCluster->points.push_back(cloud->points[index]);
 
-        for(int index : getIndices.indices)
-            cloudCluster->points.push_back(cloud->points[index]);
+    //     cloudCluster->width = cloudCluster->points.size();
+    //     cloudCluster->height = 1;
+    //     cloudCluster->is_dense = true;
 
-        cloudCluster->width = cloudCluster->points.size();
-        cloudCluster->height = 1;
-        cloudCluster->is_dense = true;
-
-        clusters.push_back(cloudCluster);
-    }
-    */
+    //     clusters.push_back(cloudCluster);
+    // }
 
     // custom kdtree code
     //perform euclidean clustering to group detected obstacles

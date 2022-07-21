@@ -27,13 +27,10 @@ std::vector<std::vector<int>> euclidean_Cluster(const std::vector<std::vector<fl
 
 	int i = 0;
 
-	while(i < points.size())
+	for (int i=0; i<points.size(); ++i)
 	{
 		if(processed_points[i])
-		{
-			i++;
 			continue;
-		}
 
 		std::vector<int> cluster;
 		euclideanclusterHelper(i,points,cluster,processed_points, tree, distanceTol);

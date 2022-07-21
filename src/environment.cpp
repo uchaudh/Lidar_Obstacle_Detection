@@ -151,7 +151,7 @@ int main (int argc, char** argv)
     std::string data;
 
     if (argc != 2) {
-        data = "../src/sensors/data/pcd/data_2";
+        data = "../src/sensors/data/pcd/data_1";
     } 
     else {
         std::string ds(argv[1]);
