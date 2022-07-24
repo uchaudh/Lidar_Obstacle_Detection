@@ -35,7 +35,6 @@ std::vector<std::vector<int>> euclidean_Cluster(const std::vector<std::vector<fl
 		std::vector<int> cluster;
 		euclideanclusterHelper(i,points,cluster,processed_points, tree, distanceTol);
 		clusters.push_back(cluster);
-		i++;
 	}
 
  

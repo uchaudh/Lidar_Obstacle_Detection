@@ -44,7 +44,7 @@ struct KdTree
 		}
 		else
 		{
-			int current_depth = depth % 2;
+			int current_depth = depth % 3;
 
 			if((point[current_depth]) < ((*node)->point[current_depth]))
 				insertHelper(&((*node)->left),depth+1, point, id);
@@ -65,17 +65,27 @@ struct KdTree
 	{
 		if(node!=NULL)
 		{
-			if((node->point[0]>= (target[0]-distanceTol) && node->point[0]<=(target[0]+distanceTol)) && (node->point[1]>=(target[1]-distanceTol) && node->point[1]<=(target[1]+distanceTol)))
+			bool points_valid;
+			for (size_t i = 0; i < target.size(); i++) 
 			{
-				float distance = sqrt((node->point[0]-target[0])*(node->point[0]-target[0])+(node->point[1]-target[1])*(node->point[1]-target[1]));
+				points_valid &= (std::abs(node->point[i] - target[i]) <= distanceTol);
+			}
+			
+			if(points_valid)
+			{
+				float distance;
+				for (size_t i = 0; i < 3; i++) 
+				{
+        			distance += (node->point[i] - target[i]) * (node->point[i] - target[i]);
+      			}
 				if (distance <= distanceTol)
 					ids.push_back(node->id);
 			}
 
-			//check across boundary
-			if((target[depth%2]-distanceTol)<node->point[depth%2])
+			//check across boundary with 3d points
+			if((target[depth%3]-distanceTol)<node->point[depth%3])
 				serachHelper(target,node->left,depth+1,distanceTol,ids);
-			if((target[depth%2]+distanceTol)>node->point[depth%2])
+			if((target[depth%3]+distanceTol)>node->point[depth%3])
 				serachHelper(target,node->right,depth+1,distanceTol,ids);
 		}
 	}
