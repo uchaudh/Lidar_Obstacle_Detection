@@ -97,10 +97,10 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer,
 
     /* Obstacle detection */
     // Distinguish between road and obstacles and remove road plane
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr,pcl::PointCloud<pcl::PointXYZI>::Ptr> segment_cloud = pointProcessor->SegmentPlane(filterCloud, 100, 0.3);
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr,pcl::PointCloud<pcl::PointXYZI>::Ptr> segment_cloud = pointProcessor->SegmentPlane(filterCloud, 25, 0.3);
 
     // Perform clustering
-    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloud_clusters = pointProcessor->Clustering(segment_cloud.first, 0.6, 10, 350);
+    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloud_clusters = pointProcessor->Clustering(segment_cloud.first, 0.5, 10, 500);
 
     renderPointCloud(viewer, segment_cloud.first, "obstCloud", Color(1, 0, 0));
     renderPointCloud(viewer, segment_cloud.second, "planeCloud", Color(0, 1, 0));

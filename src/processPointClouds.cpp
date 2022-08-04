@@ -23,48 +23,29 @@ void ProcessPointClouds<PointT>::numPoints(typename pcl::PointCloud<PointT>::Ptr
 template<typename PointT>
 typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)
 {
-
-    // Time segmentation process
-    auto startTime = std::chrono::steady_clock::now();
-
     // Voxel grid point reduction and region based filtering
     typename pcl::PointCloud<PointT>::Ptr cloud_filtered (new pcl::PointCloud<PointT>);
     typename pcl::PointCloud<PointT>::Ptr cloudRegion (new pcl::PointCloud<PointT>);
 
+    // filtering object
     pcl::VoxelGrid<PointT> vg;
-
     vg.setInputCloud(cloud);
     vg.setLeafSize(filterRes, filterRes, filterRes);
     vg.filter(*cloud_filtered);
 
+    // crop the region of interest
     pcl::CropBox<PointT> region(true);
-
     region.setMin(minPoint);
     region.setMax(maxPoint);
     region.setInputCloud(cloud_filtered);
     region.filter(*cloudRegion);
 
-    std::vector<int> indices;
-    pcl::CropBox<PointT> roof(true);
-    roof.setMin(Eigen::Vector4f(-1.5,-2.5,-1,1));
-    roof.setMax(Eigen::Vector4f(4,2.5,1,1));
-    roof.setInputCloud(cloudRegion);
-    roof.filter(indices);
-
-    pcl::PointIndices::Ptr inliers {new pcl::PointIndices};
-    for(int point : indices)
-        inliers->indices.push_back(point);
-
-    pcl::ExtractIndices<PointT> extract;
-    extract.setInputCloud(cloudRegion);
-    extract.setIndices(inliers);
-    extract.setNegative(true);
-    extract.filter(*cloudRegion);
-
-
-    auto endTime = std::chrono::steady_clock::now();
-    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-    std::cout << "filtering took " << elapsedTime.count() << " milliseconds" << std::endl;
+    // filter roof points                       
+    region.setMin(Eigen::Vector4f(-1.5,-2.5,-1,1));
+    region.setMax(Eigen::Vector4f(4,2.5,1,1));
+    region.setInputCloud(cloudRegion);
+    region.setNegative(true);
+    region.filter(*cloudRegion);
 
     return cloudRegion;
 
