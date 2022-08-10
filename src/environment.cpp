@@ -93,14 +93,14 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer,
   // -----Open 3D viewer and display City Block     -----
   // ----------------------------------------------------
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr filterCloud = pointProcessor->FilterCloud(inputCloud, 0.3 , Eigen::Vector4f (-10, -6, -3, 5), Eigen::Vector4f ( 20, 6, 1, 1));
+    pcl::PointCloud<pcl::PointXYZI>::Ptr filterCloud = pointProcessor->FilterCloud(inputCloud, 0.25 , Eigen::Vector4f (-10, -6, -3, 5), Eigen::Vector4f ( 20, 6, 1, 1));
 
     /* Obstacle detection */
     // Distinguish between road and obstacles and remove road plane
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr,pcl::PointCloud<pcl::PointXYZI>::Ptr> segment_cloud = pointProcessor->SegmentPlane(filterCloud, 25, 0.3);
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr,pcl::PointCloud<pcl::PointXYZI>::Ptr> segment_cloud = pointProcessor->SegmentPlane(filterCloud, 100, 0.2);
 
     // Perform clustering
-    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloud_clusters = pointProcessor->Clustering(segment_cloud.first, 0.5, 10, 500);
+    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloud_clusters = pointProcessor->Clustering(segment_cloud.first, 1.0, 10, 500);
 
     renderPointCloud(viewer, segment_cloud.first, "obstCloud", Color(1, 0, 0));
     renderPointCloud(viewer, segment_cloud.second, "planeCloud", Color(0, 1, 0));
